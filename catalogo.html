@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Rápido</title>
+    <!-- Tailwind CSS para um design limpo e moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 pb-24">
+
+    <!-- Cabeçalho -->
+    <header class="bg-emerald-600 text-white p-4 text-center shadow-md">
+        <h1 class="text-xl font-bold">Meu Catálogo</h1>
+        <p class="text-xs text-emerald-100">Escolha os seus produtos e peça pelo WhatsApp</p>
+    </header>
+
+    <!-- Lista de Produtos -->
+    <main class="max-w-md mx-auto p-4 space-y-4" id="lista-produtos">
+        <!-- Os produtos serão injetados aqui via JavaScript -->
+    </main>
+
+    <!-- Rodapé Fixo / Botão de WhatsApp -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg flex justify-between items-center max-w-md mx-auto">
+        <div>
+            <span class="text-xs text-gray-500 block">Total do Pedido:</span>
+            <span id="valor-total" class="text-lg font-bold text-emerald-600">R$ 0,00</span>
+        </div>
+        <button onclick="enviarPedido()" class="bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-medium shadow hover:bg-emerald-700 transition flex items-center gap-2">
+            Pedir no WhatsApp
+        </button>
+    </div>
+
+    <script>
+        // Configuração do WhatsApp com o teu número
+        const numeroWhatsApp = "5512991421077";
+
+        // Base de dados com os produtos reais e os nomes limpos das imagens
+        const produtos = [
+            { 
+                id: 1, 
+                nome: "🎧 Fone de Ouvido Bluetooth", 
+                preco: 149.90, 
+                desc: "Bluetooth 5.3, até 20h de bateria com estojo, microfone integrado e resistência à água.", 
+                imagem: "fone.png" 
+            },
+            { 
+                id: 2, 
+                nome: "⌚ Smartwatch", 
+                preco: 229.90, 
+                desc: "Monitoramento cardíaco, +100 modos esportivos, acompanhamento do sono e notificações.", 
+                imagem: "smartwatch.png" 
+            },
+            { 
+                id: 3, 
+                nome: "💻 Notebook", 
+                preco: 2899.00, 
+                desc: "Processador Intel Core i5, 8GB RAM, SSD 256GB e tela Full HD de 15,6”.", 
+                imagem: "notebook.png" 
+            }
+        ];
+
+        // Estado do carrinho (quantidade de cada produto)
+        let carrinho = {};
+
+        function renderizarProdutos() {
+            const container = document.getElementById('lista-produtos');
+            container.innerHTML = '';
+
+            produtos.forEach(prod => {
+                let qtd = carrinho[prod.id] || 0;
+                
+                let card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-3";
+                
+                card.innerHTML = `
+                    <div class="flex gap-4 items-center">
+                        <img src="${prod.imagem}" alt="${prod.nome}" class="w-20 h-20 object-cover rounded-lg border border-gray-100 flex-shrink-0">
+                        <div class="space-y-1 flex-grow">
+                            <h2 class="font-semibold text-gray-900 text-sm">${prod.nome}</h2>
+                            <p class="text-xs text-gray-500 leading-relaxed">${prod.desc}</p>
+                            <span class="text-emerald-600 font-bold block pt-1">R$ ${prod.preco.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t border-gray-50">
+                        <span class="text-xs text-gray-400 font-medium">Quantidade:</span>
+                        <div class="flex items-center gap-3">
+                            <button onclick="alterarQtd(${prod.id}, -1)" class="w-8 h-8 bg-gray-100 rounded-full font-bold text-gray-600 flex items-center justify-center">-</button>
+                            <span id="qtd-${prod.id}" class="w-6 text-center font-medium">${qtd}</span>
+                            <button onclick="alterarQtd(${prod.id}, 1)" class="w-8 h-8 bg-emerald-100 rounded-full font-bold text-emerald-600 flex items-center justify-center">+</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            atualizarTotal();
+        }
+
+        function alterarQtd(id, delta) {
+            if (!carrinho[id]) carrinho[id] = 0;
+            carrinho[id] += delta;
+            if (carrinho[id] < 0) carrinho[id] = 0;
+            
+            document.getElementById(`qtd-${id}`).innerText = carrinho[id];
+            atualizarTotal();
+        }
+
+        function calcularTotal() {
+            let total = 0;
+            produtos.forEach(prod => {
+                let qtd = carrinho[prod.id] || 0;
+                total += prod.preco * qtd;
+            });
+            return total;
+        }
+
+        function atualizarTotal() {
+            let total = calcularTotal();
+            document.getElementById('valor-total').innerText = `R$ ${total.toFixed(2)}`;
+        }
+
+        function enviarPedido() {
+            let total = calcularTotal();
+            if (total === 0) {
+                alert("Seleciona pelo menos um produto antes de enviar o pedido.");
+                return;
+            }
+
+            let mensagem = "Olá! Gostaria de fazer o seguinte pedido:%0A";
+            produtos.forEach(prod => {
+                let qtd = carrinho[prod.id] || 0;
+                if (qtd > 0) {
+                    mensagem += `- ${qtd}x ${prod.nome} (R$ ${(prod.preco * qtd).toFixed(2)})%0A`;
+                }
+            });
+            mensagem += `%0A*Total: R$ ${total.toFixed(2)}*`;
+
+            let url = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
+            window.open(url, '_blank');
+        }
+
+        // Inicializar a página
+        renderizarProdutos();
+    </script>
+</body>
+</html>
+

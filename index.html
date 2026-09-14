@@ -136,6 +136,34 @@
 
     </main>
 
+    <!-- MODAL DE DETALHES DO PRODUTO (NOVO) -->
+    <div id="modal-produto" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-amber-500/40 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-200">
+            <!-- Botão Fechar Modal -->
+            <button onclick="fecharModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-sm hover:bg-zinc-700 transition">✕</button>
+            
+            <img id="modal-img" src="" alt="" class="w-full h-52 object-cover border-b border-zinc-800">
+            
+            <div class="p-5 space-y-4">
+                <div>
+                    <h3 id="modal-nome" class="font-black text-zinc-100 text-base mb-1"></h3>
+                    <span id="modal-preco" class="text-amber-400 font-black text-lg block"></span>
+                </div>
+
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Descrição Completa</span>
+                    <p id="modal-desc" class="text-xs text-zinc-300 leading-relaxed"></p>
+                </div>
+
+                <div class="pt-2">
+                    <button onclick="fecharModal()" class="w-full bg-amber-500 text-black font-black py-3 rounded-xl text-xs uppercase tracking-wider hover:bg-amber-600 transition shadow-lg shadow-amber-500/20">
+                        Fechar e Voltar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- RODAPÉ DE NAVEGAÇÃO / BOTÕES DE AÇÃO -->
     <div class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800 p-4 shadow-2xl max-w-md mx-auto flex justify-between items-center">
         <!-- Botão Voltar -->
@@ -156,7 +184,7 @@
 
     <script>
         const numeroWhatsApp = "5512991421077";
-        let etapaAtual = 1; // 1: Catálogo | 1.5: Carrinho | 2: Dados | 3: Revisão
+        let etapaAtual = 1; 
         let categoriaAtiva = 'todos';
 
         const produtos = [
@@ -165,7 +193,7 @@
                 categoria: "fone",
                 nome: "🎧 Fone de Ouvido Bluetooth", 
                 preco: 149.90, 
-                desc: "Bluetooth 5.3, até 20h de bateria, estojo e microfone integrado.", 
+                desc: "Bluetooth 5.3 de alta estabilidade, cancelamento passivo de ruído, bateria com autonomia de até 20 horas somadas ao estojo de carregamento, design ergonômico à prova d'água e microfone integrado de alta nitidez para chamadas.", 
                 imagem: "fone.jpeg" 
             },
             { 
@@ -173,7 +201,7 @@
                 categoria: "smartwatch",
                 nome: "⌚ Smartwatch", 
                 preco: 229.90, 
-                desc: "Monitoramento cardíaco, +100 modos esportivos e notificações.", 
+                desc: "Monitoramento contínuo de frequência cardíaca e oxigênio no sangue, mais de 100 modos esportivos dedicados, recebimento de notificações de redes sociais, chamadas direto no pulso e certificação de resistência contra poeira e água.", 
                 imagem: "smartwatch.jpeg" 
             },
             { 
@@ -181,7 +209,7 @@
                 categoria: "computador",
                 nome: "💻 Notebook", 
                 preco: 2899.00, 
-                desc: "Processador Intel Core i5, 8GB RAM, SSD 256GB e tela Full HD.", 
+                desc: "Equipado com processador Intel Core i5 de alta performance, 8GB de memória RAM expansível, armazenamento ultrarrápido SSD de 256GB, tela Full HD antirreflexo e acabamento premium voltado para produtividade e multitarefas.", 
                 imagem: "notebook.jpeg" 
             }
         ];
@@ -220,12 +248,12 @@
                 card.className = "bg-zinc-900 p-4 rounded-2xl shadow-xl border border-zinc-800 flex flex-col gap-3 transition hover:border-amber-500/50";
                 
                 card.innerHTML = `
-                    <div class="flex gap-4 items-center">
+                    <div class="flex gap-4 items-center cursor-pointer" onclick="abrirModal(${prod.id})">
                         <img src="${prod.imagem}" alt="${prod.nome}" class="w-20 h-20 object-cover rounded-xl border border-zinc-800 flex-shrink-0">
                         <div class="space-y-1 flex-grow">
-                            <h3 class="font-bold text-zinc-100 text-sm">${prod.nome}</h3>
+                            <h3 class="font-bold text-zinc-100 text-sm hover:text-amber-400 transition">${prod.nome}</h3>
                             <p class="text-xs text-zinc-400 leading-relaxed line-clamp-2">${prod.desc}</p>
-                            <span class="text-amber-400 font-bold block pt-0.5">R$ ${prod.preco.toFixed(2)}</span>
+                            <span class="text-amber-400 font-bold block pt-0.5">R$ ${prod.preco.toFixed(2)} <span class="text-[10px] text-zinc-500 underline font-normal ml-1">Ver detalhes</span></span>
                         </div>
                     </div>
                     <div class="flex justify-between items-center pt-3 border-t border-zinc-800">
@@ -240,6 +268,22 @@
                 container.appendChild(card);
             });
             atualizarTotal();
+        }
+
+        function abrirModal(id) {
+            let prod = produtos.find(p => p.id === id);
+            if (!prod) return;
+
+            document.getElementById('modal-img').src = prod.imagem;
+            document.getElementById('modal-nome').innerText = prod.nome;
+            document.getElementById('modal-preco').innerText = `R$ ${prod.preco.toFixed(2)}`;
+            document.getElementById('modal-desc').innerText = prod.desc;
+
+            document.getElementById('modal-produto').classList.remove('hidden');
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-produto').classList.add('hidden');
         }
 
         function alterarQtd(id, delta) {
@@ -338,14 +382,14 @@
                     alert("Por favor, selecione pelo menos um produto antes de continuar.");
                     return;
                 }
-                irParaCarrinho(); // CORRIGIDO: Agora vai para o carrinho (1.5) e não direto para os dados
+                irParaCarrinho();
             } else if (etapaAtual === 1.5) {
                 if (res.total === 0) {
                     alert("Seu carrinho está vazio.");
                     voltarParaCatalogo();
                     return;
                 }
-                etapaAtual = 2; // Agora sim vai para os dados do cliente
+                etapaAtual = 2;
                 atualizarTela();
             } else if (etapaAtual === 2) {
                 let nome = document.getElementById('nome-cliente').value.trim();

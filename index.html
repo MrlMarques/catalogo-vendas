@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Exclusivo</title>
+    <title>Mrl Store Gold - Catálogo Exclusivo</title>
 
     <!-- TAGS DE PRÉVIA PARA COMPARTILHAMENTO (Open Graph) -->
-    <meta property="og:title" content="Catálogo Exclusivo | Faça seu Pedido" />
-    <meta property="og:description" content="Confira nossos produtos, selecione o que deseja e peça direto pelo WhatsApp com facilidade." />
+    <meta property="og:title" content="Mrl Store Gold | Catálogo Exclusivo" />
+    <meta property="og:description" content="Confira nossos produtos de alta qualidade, selecione o que deseja e peça direto pelo WhatsApp." />
     <meta property="og:image" content="https://mrlmarques.github.io/catalogo-vendas/capa.jpeg" />
     <meta property="og:url" content="https://mrlmarques.github.io/catalogo-vendas/" />
     <meta property="og:type" content="website" />
@@ -17,15 +17,23 @@
 </head>
 <body class="bg-black text-zinc-100 pb-28">
 
-    <!-- Cabeçalho Elegante (Vermelho e Preto) -->
-    <header class="bg-gradient-to-r from-red-700 via-red-800 to-zinc-900 text-white p-6 text-center shadow-lg border-b border-red-900/40">
-        <h1 id="titulo-header" class="text-2xl font-extrabold tracking-wide">Catálogo Exclusivo</h1>
-        <p id="subtitulo-header" class="text-xs text-red-200 mt-1 opacity-90">Escolha seus produtos para continuar</p>
+    <!-- CABEÇALHO / BANNER DA LOGOTIPO (Tema Preto e Dourado) -->
+    <header class="bg-zinc-950 border-b border-amber-500/30 shadow-2xl p-3 text-center">
+        <div class="max-w-md mx-auto">
+            <!-- Insira a imagem do seu banner como 'banner.jpeg' no repositório -->
+            <img src="banner.jpeg" alt="Mrl Store Gold" class="w-full h-auto max-h-40 object-contain rounded-xl mx-auto shadow-md border border-amber-500/20" onerror="this.style.display='none'; document.getElementById('fallback-titulo').style.display='block';">
+            
+            <!-- Fallback caso a imagem demore ou falhe ao carregar -->
+            <div id="fallback-titulo" style="display:none;" class="py-4">
+                <h1 class="text-2xl font-black tracking-wider text-amber-400">MRL STORE GOLD</h1>
+                <p class="text-xs text-amber-200/70 mt-1 uppercase tracking-widest">Catálogo Exclusivo</p>
+            </div>
+        </div>
     </header>
 
-    <!-- NAVEGADOR DE ABAS / CATEGORIAS (Visível apenas na Etapa 1) -->
+    <!-- NAVEGADOR DE ABAS / CATEGORIAS (Preto e Dourado) -->
     <nav id="barra-categorias" class="max-w-md mx-auto px-4 pt-4 overflow-x-auto whitespace-nowrap flex gap-2 no-scrollbar">
-        <button onclick="filtrarCategoria('todos', this)" class="cat-btn bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-red-600/30 transition">Todos os Produtos</button>
+        <button onclick="filtrarCategoria('todos', this)" class="cat-btn bg-amber-500 text-black px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-amber-500/20 transition">Todos os Produtos</button>
         <button onclick="filtrarCategoria('smartwatch', this)" class="cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition">Smartwatches</button>
         <button onclick="filtrarCategoria('fone', this)" class="cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition">Fones de Ouvido</button>
         <button onclick="filtrarCategoria('computador', this)" class="cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition">Computadores</button>
@@ -41,23 +49,23 @@
             </div>
         </section>
 
-        <!-- ETAPA 2: DADOS DO CLIENTE (Oculto inicialmente) -->
+        <!-- ETAPA 2: DADOS DO CLIENTE -->
         <section id="etapa-dados" class="hidden bg-zinc-900 p-6 rounded-2xl shadow-xl border border-zinc-800 space-y-4">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">Informações de Contato</h2>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">Informações de Contato</h2>
             
             <div>
                 <label class="block text-xs font-semibold text-zinc-400 mb-1">Nome Completo</label>
-                <input type="text" id="nome-cliente" placeholder="Ex: João da Silva" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition">
+                <input type="text" id="nome-cliente" placeholder="Ex: João da Silva" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-zinc-400 mb-1">Telefone / WhatsApp</label>
-                <input type="tel" id="fone-cliente" placeholder="Ex: (11) 99999-9999" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition">
+                <input type="tel" id="fone-cliente" placeholder="Ex: (11) 99999-9999" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
             </div>
 
             <div>
                 <label class="block text-xs font-semibold text-zinc-400 mb-1">Forma de Pagamento</label>
-                <select id="pagamento-cliente" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent transition">
+                <select id="pagamento-cliente" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
                     <option value="" disabled selected class="text-zinc-500">Selecione a forma de pagamento</option>
                     <option value="Cartão de Crédito" class="bg-zinc-900">Cartão de Crédito</option>
                     <option value="Cartão de Débito" class="bg-zinc-900">Cartão de Débito</option>
@@ -66,10 +74,10 @@
             </div>
         </section>
 
-        <!-- ETAPA 3: REVISÃO DO PEDIDO (Oculto inicialmente) -->
+        <!-- ETAPA 3: REVISÃO DO PEDIDO -->
         <section id="etapa-revisao" class="hidden space-y-4">
             <div class="bg-zinc-900 p-6 rounded-2xl shadow-xl border border-zinc-800 space-y-4">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-300 border-b border-zinc-800 pb-2">Resumo do Pedido</h2>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-amber-400 border-b border-zinc-800 pb-2">Resumo do Pedido</h2>
                 
                 <div class="text-xs space-y-1.5 text-zinc-300">
                     <p><strong class="text-zinc-100">Nome:</strong> <span id="resumo-nome"></span></p>
@@ -78,7 +86,7 @@
                 </div>
 
                 <div class="border-t border-zinc-800 pt-3">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-300 mb-2">Itens Selecionados</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">Itens Selecionados</h3>
                     <div id="resumo-itens" class="space-y-2 text-xs text-zinc-300 max-h-40 overflow-y-auto">
                         <!-- Itens do carrinho listados aqui -->
                     </div>
@@ -86,7 +94,7 @@
 
                 <div class="border-t border-zinc-800 pt-3 flex justify-between items-center">
                     <span class="text-xs font-bold text-zinc-400 uppercase">Total a Pagar:</span>
-                    <span id="resumo-total" class="text-lg font-black text-red-500">R$ 0,00</span>
+                    <span id="resumo-total" class="text-lg font-black text-amber-400">R$ 0,00</span>
                 </div>
             </div>
         </section>
@@ -94,19 +102,19 @@
     </main>
 
     <!-- RODAPÉ DE NAVEGAÇÃO / BOTÕES DE AÇÃO -->
-    <div class="fixed bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur-md border-t border-zinc-800 p-4 shadow-2xl max-w-md mx-auto flex justify-between items-center">
-        <!-- Botão Voltar (aparece nas etapas 2 e 3) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800 p-4 shadow-2xl max-w-md mx-auto flex justify-between items-center">
+        <!-- Botão Voltar -->
         <button id="btn-voltar" onclick="voltarEtapa()" class="hidden text-zinc-400 hover:text-zinc-100 px-3 py-2.5 rounded-xl font-bold text-sm transition">
             ← Voltar
         </button>
 
         <div id="info-rodape">
             <span class="text-xs text-zinc-400 block">Total do Pedido:</span>
-            <span id="valor-total" class="text-lg font-black text-red-500">R$ 0,00</span>
+            <span id="valor-total" class="text-lg font-black text-amber-400">R$ 0,00</span>
         </div>
 
         <!-- Botão Avançar / Enviar -->
-        <button id="btn-acao" onclick="avancarEtapa()" class="bg-red-600 hover:bg-red-700 active:scale-95 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-red-600/30 transition flex items-center gap-2">
+        <button id="btn-acao" onclick="avancarEtapa()" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-black px-6 py-3 rounded-xl font-black text-sm shadow-lg shadow-amber-500/20 transition flex items-center gap-2">
             Continuar →
         </button>
     </div>
@@ -152,7 +160,7 @@
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 btn.className = "cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition";
             });
-            elementoBtn.className = "cat-btn bg-red-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-red-600/30 transition";
+            elementoBtn.className = "cat-btn bg-amber-500 text-black px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-amber-500/20 transition";
 
             renderizarProdutos();
         }
@@ -161,7 +169,6 @@
             const container = document.getElementById('lista-produtos');
             container.innerHTML = '';
 
-            // Filtrar produtos de acordo com a aba selecionada
             let produtosFiltrados = produtos.filter(prod => {
                 if (categoriaAtiva === 'todos') return true;
                 return prod.categoria === categoriaAtiva;
@@ -176,7 +183,7 @@
                 let qtd = carrinho[prod.id] || 0;
                 
                 let card = document.createElement('div');
-                card.className = "bg-zinc-900 p-4 rounded-2xl shadow-xl border border-zinc-800 flex flex-col gap-3 transition hover:border-zinc-700";
+                card.className = "bg-zinc-900 p-4 rounded-2xl shadow-xl border border-zinc-800 flex flex-col gap-3 transition hover:border-amber-500/50";
                 
                 card.innerHTML = `
                     <div class="flex gap-4 items-center">
@@ -184,7 +191,7 @@
                         <div class="space-y-1 flex-grow">
                             <h3 class="font-bold text-zinc-100 text-sm">${prod.nome}</h3>
                             <p class="text-xs text-zinc-400 leading-relaxed line-clamp-2">${prod.desc}</p>
-                            <span class="text-red-500 font-bold block pt-0.5">R$ ${prod.preco.toFixed(2)}</span>
+                            <span class="text-amber-400 font-bold block pt-0.5">R$ ${prod.preco.toFixed(2)}</span>
                         </div>
                     </div>
                     <div class="flex justify-between items-center pt-3 border-t border-zinc-800">
@@ -192,7 +199,7 @@
                         <div class="flex items-center gap-3">
                             <button onclick="alterarQtd(${prod.id}, -1)" class="w-8 h-8 bg-zinc-800 hover:bg-zinc-700 rounded-xl font-bold text-zinc-300 flex items-center justify-center transition">-</button>
                             <span id="qtd-${prod.id}" class="w-6 text-center font-bold text-zinc-100">${qtd}</span>
-                            <button onclick="alterarQtd(${prod.id}, 1)" class="w-8 h-8 bg-red-950/60 hover:bg-red-900/80 text-red-400 border border-red-900/50 rounded-xl font-bold flex items-center justify-center transition">+</button>
+                            <button onclick="alterarQtd(${prod.id}, 1)" class="w-8 h-8 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/40 rounded-xl font-bold flex items-center justify-center transition">+</button>
                         </div>
                     </div>
                 `;
@@ -255,7 +262,6 @@
                     return;
                 }
 
-                // Preencher tela de resumo
                 document.getElementById('resumo-nome').innerText = nome;
                 document.getElementById('resumo-fone').innerText = fone;
                 document.getElementById('resumo-pagamento').innerText = pagamento;
@@ -292,10 +298,7 @@
             const btnVoltar = document.getElementById('btn-voltar');
             const btnAcao = document.getElementById('btn-acao');
             const infoRodape = document.getElementById('info-rodape');
-            const tituloHeader = document.getElementById('titulo-header');
-            const subtituloHeader = document.getElementById('subtitulo-header');
 
-            // Esconder todas as seções
             secCatalogo.classList.add('hidden');
             secDados.classList.add('hidden');
             secRevisao.classList.add('hidden');
@@ -305,23 +308,17 @@
 
             if (etapaAtual === 1) {
                 secCatalogo.classList.remove('hidden');
-                barraCategorias.classList.remove('hidden'); // Mostra as abas apenas na etapa 1
+                barraCategorias.classList.remove('hidden');
                 btnAcao.innerText = "Continuar →";
-                tituloHeader.innerText = "Catálogo Exclusivo";
-                subtituloHeader.innerText = "Escolha seus produtos para continuar";
             } else if (etapaAtual === 2) {
                 secDados.classList.remove('hidden');
                 btnVoltar.classList.remove('hidden');
                 btnAcao.innerText = "Revisar Pedido →";
-                tituloHeader.innerText = "Seus Dados";
-                subtituloHeader.innerText = "Informe seus dados para entrega/contato";
             } else if (etapaAtual === 3) {
                 secRevisao.classList.remove('hidden');
                 btnVoltar.classList.remove('hidden');
                 btnAcao.innerText = "Enviar para o WhatsApp 📱";
-                infoRodape.classList.add('hidden'); // O total já aparece dentro do card de revisão
-                tituloHeader.innerText = "Revisão do Pedido";
-                subtituloHeader.innerText = "Confira os detalhes antes de enviar";
+                infoRodape.classList.add('hidden');
             }
         }
 
@@ -331,7 +328,7 @@
             let pagamento = document.getElementById('pagamento-cliente').value;
             let total = calcularTotal();
 
-            let mensagem = `*📦 NOVO PEDIDO - CATÁLOGO*%0A%0A`;
+            let mensagem = `*🌟 NOVO PEDIDO - MRL STORE GOLD*%0A%0A`;
             mensagem += `*Cliente:* ${nome}%0A`;
             mensagem += `*Telefone:* ${fone}%0A`;
             mensagem += `*Pagamento:* ${pagamento}%0A%0A`;
@@ -350,7 +347,6 @@
             window.open(url, '_blank');
         }
 
-        // Inicializar a página na etapa 1
         renderizarProdutos();
     </script>
 </body>

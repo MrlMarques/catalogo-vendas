@@ -31,7 +31,25 @@
         </div>
     </header>
 
-    <!-- NAVEGADOR DE ABAS / CATEGORIAS (Preto e Dourado) -->
+    <!-- ÍCONE DE CARRINHO FLUTUANTE NO TOPO (Aparece ao selecionar produtos na Etapa 1) -->
+    <div id="barra-carrinho-topo" class="hidden max-w-md mx-auto px-4 pt-3">
+        <div onclick="avancarEtapa()" class="bg-zinc-900 border border-amber-500/40 p-3.5 rounded-2xl shadow-lg flex items-center justify-between cursor-pointer hover:bg-zinc-800/80 transition">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-lg">
+                    🛒
+                </div>
+                <div>
+                    <span id="contador-itens-topo" class="text-xs font-bold text-zinc-100 block">0 itens selecionados</span>
+                    <span id="valor-total-topo" class="text-sm font-black text-amber-400">R$ 0,00</span>
+                </div>
+            </div>
+            <div class="bg-amber-500 text-black text-xs font-black px-4 py-2 rounded-xl shadow-md shadow-amber-500/20 flex items-center gap-1">
+                Ver Carrinho →
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVEGADOR DE ABAS / CATEGORIAS (Visível apenas na Etapa 1) -->
     <nav id="barra-categorias" class="max-w-md mx-auto px-4 pt-4 overflow-x-auto whitespace-nowrap flex gap-2 no-scrollbar">
         <button onclick="filtrarCategoria('todos', this)" class="cat-btn bg-amber-500 text-black px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-amber-500/20 transition">Todos os Produtos</button>
         <button onclick="filtrarCategoria('smartwatch', this)" class="cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition">Smartwatches</button>
@@ -156,7 +174,6 @@
         function filtrarCategoria(cat, elementoBtn) {
             categoriaAtiva = cat;
 
-            // Atualizar estilo visual dos botões de categoria
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 btn.className = "cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition";
             });
@@ -219,23 +236,37 @@
 
         function calcularTotal() {
             let total = 0;
+            let totalItens = 0;
             produtos.forEach(prod => {
                 let qtd = carrinho[prod.id] || 0;
                 total += prod.preco * qtd;
+                totalItens += qtd;
             });
-            return total;
+            return { total, totalItens };
         }
 
         function atualizarTotal() {
-            let total = calcularTotal();
-            document.getElementById('valor-total').innerText = `R$ ${total.toFixed(2)}`;
+            let res = calcularTotal();
+            
+            // Atualizar rodapé
+            document.getElementById('valor-total').innerText = `R$ ${res.total.toFixed(2)}`;
+
+            // Atualizar barra do carrinho no topo
+            const barraTopo = document.getElementById('barra-carrinho-topo');
+            if (res.totalItens > 0 && etapaAtual === 1) {
+                barraTopo.classList.remove('hidden');
+                document.getElementById('contador-itens-topo').innerText = `${res.totalItens} ${res.totalItens === 1 ? 'item selecionado' : 'itens selecionados'}`;
+                document.getElementById('valor-total-topo').innerText = `R$ ${res.total.toFixed(2)}`;
+            } else {
+                barraTopo.classList.add('hidden');
+            }
         }
 
         function avancarEtapa() {
-            let total = calcularTotal();
+            let res = calcularTotal();
 
             if (etapaAtual === 1) {
-                if (total === 0) {
+                if (res.total === 0) {
                     alert("Por favor, selecione pelo menos um produto antes de continuar.");
                     return;
                 }
@@ -265,7 +296,7 @@
                 document.getElementById('resumo-nome').innerText = nome;
                 document.getElementById('resumo-fone').innerText = fone;
                 document.getElementById('resumo-pagamento').innerText = pagamento;
-                document.getElementById('resumo-total').innerText = `R$ ${total.toFixed(2)}`;
+                document.getElementById('resumo-total').innerText = `R$ ${res.total.toFixed(2)}`;
 
                 let itensHTML = '';
                 produtos.forEach(prod => {
@@ -292,6 +323,7 @@
 
         function atualizarTela() {
             const barraCategorias = document.getElementById('barra-categorias');
+            const barraCarrinhoTopo = document.getElementById('barra-carrinho-topo');
             const secCatalogo = document.getElementById('etapa-catalogo');
             const secDados = document.getElementById('etapa-dados');
             const secRevisao = document.getElementById('etapa-revisao');
@@ -304,12 +336,14 @@
             secRevisao.classList.add('hidden');
             btnVoltar.classList.add('hidden');
             barraCategorias.classList.add('hidden');
+            barraCarrinhoTopo.classList.add('hidden');
             infoRodape.classList.remove('hidden');
 
             if (etapaAtual === 1) {
                 secCatalogo.classList.remove('hidden');
                 barraCategorias.classList.remove('hidden');
                 btnAcao.innerText = "Continuar →";
+                atualizarTotal(); // Reavalia se exibe a barra do carrinho no topo
             } else if (etapaAtual === 2) {
                 secDados.classList.remove('hidden');
                 btnVoltar.classList.remove('hidden');
@@ -326,7 +360,7 @@
             let nome = document.getElementById('nome-cliente').value.trim();
             let fone = document.getElementById('fone-cliente').value.trim();
             let pagamento = document.getElementById('pagamento-cliente').value;
-            let total = calcularTotal();
+            let res = calcularTotal();
 
             let mensagem = `*🌟 NOVO PEDIDO - MRL STORE GOLD*%0A%0A`;
             mensagem += `*Cliente:* ${nome}%0A`;
@@ -341,7 +375,7 @@
                 }
             });
 
-            mensagem += `%0A*Total Geral: R$ ${total.toFixed(2)}*`;
+            mensagem += `%0A*Total Geral: R$ ${res.total.toFixed(2)}*`;
 
             let url = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
             window.open(url, '_blank');

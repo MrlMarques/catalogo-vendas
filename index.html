@@ -3,65 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Rápido</title>
-    <!-- Tailwind CSS para um design limpo e moderno -->
+    <title>Catálogo Exclusivo | Faça seu Pedido</title>
+    <!-- Tailwind CSS para um design profissional e moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 pb-24">
+<body class="bg-slate-100 text-slate-800 pb-32">
 
-    <!-- Cabeçalho -->
-    <header class="bg-emerald-600 text-white p-4 text-center shadow-md">
-        <h1 class="text-xl font-bold">Meu Catálogo</h1>
-        <p class="text-xs text-emerald-100">Escolha os seus produtos e peça pelo WhatsApp</p>
+    <!-- Cabeçalho Elegante -->
+    <header class="bg-gradient-to-r from-emerald-700 to-teal-800 text-white p-6 text-center shadow-md">
+        <h1 class="text-2xl font-extrabold tracking-wide">Catálogo Exclusivo</h1>
+        <p class="text-xs text-emerald-100 mt-1 opacity-90">Selecione seus produtos, preencha os dados e peça com praticidade</p>
     </header>
 
-    <!-- Lista de Produtos -->
-    <main class="max-w-md mx-auto p-4 space-y-4" id="lista-produtos">
-        <!-- Os produtos serão injetados aqui via JavaScript -->
+    <!-- Conteúdo Principal -->
+    <main class="max-w-md mx-auto p-4 space-y-6">
+
+        <!-- Seção: Lista de Produtos -->
+        <section>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3 px-1">Produtos Disponíveis</h2>
+            <div id="lista-produtos" class="space-y-3">
+                <!-- Produtos injetados via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Seção: Dados do Cliente e Pagamento -->
+        <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-700">Seus Dados e Pagamento</h2>
+            
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nome Completo</label>
+                <input type="text" id="nome-cliente" placeholder="Ex: João da Silva" class="w-full px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Telefone / WhatsApp</label>
+                <input type="tel" id="fone-cliente" placeholder="Ex: (11) 99999-9999" class="w-full px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Forma de Pagamento</label>
+                <select id="pagamento-cliente" class="w-full px-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
+                    <option value="" disabled selected>Selecione a forma de pagamento</option>
+                    <option value="Cartão de Crédito">Cartão de Crédito</option>
+                    <option value="Cartão de Débito">Cartão de Débito</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                </select>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Rodapé Fixo / Botão de WhatsApp -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg flex justify-between items-center max-w-md mx-auto">
+    <!-- Rodapé Fixo / Checkout -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 shadow-2xl flex justify-between items-center max-w-md mx-auto">
         <div>
-            <span class="text-xs text-gray-500 block">Total do Pedido:</span>
-            <span id="valor-total" class="text-lg font-bold text-emerald-600">R$ 0,00</span>
+            <span class="text-xs text-slate-500 block">Total do Pedido:</span>
+            <span id="valor-total" class="text-xl font-black text-emerald-600">R$ 0,00</span>
         </div>
-        <button onclick="enviarPedido()" class="bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-medium shadow hover:bg-emerald-700 transition flex items-center gap-2">
-            Pedir no WhatsApp
+        <button onclick="enviarPedido()" class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center gap-2">
+            Finalizar Pedido
         </button>
     </div>
 
     <script>
-        // Configuração do WhatsApp com o teu número
         const numeroWhatsApp = "5512991421077";
 
-        // Base de dados com os produtos reais e os nomes limpos das imagens
-                const produtos = [
+        const produtos = [
             { 
                 id: 1, 
                 nome: "🎧 Fone de Ouvido Bluetooth", 
                 preco: 149.90, 
-                desc: "Bluetooth 5.3, até 20h de bateria com estojo, microfone integrado e resistência à água.", 
+                desc: "Bluetooth 5.3, até 20h de bateria, estojo e microfone integrado.", 
                 imagem: "fone.jpeg" 
             },
             { 
                 id: 2, 
                 nome: "⌚ Smartwatch", 
                 preco: 229.90, 
-                desc: "Monitoramento cardíaco, +100 modos esportivos, acompanhamento do sono e notificações.", 
+                desc: "Monitoramento cardíaco, +100 modos esportivos e notificações.", 
                 imagem: "smartwatch.jpeg" 
             },
             { 
                 id: 3, 
                 nome: "💻 Notebook", 
                 preco: 2899.00, 
-                desc: "Processador Intel Core i5, 8GB RAM, SSD 256GB e tela Full HD de 15,6”.", 
+                desc: "Processador Intel Core i5, 8GB RAM, SSD 256GB e tela Full HD.", 
                 imagem: "notebook.jpeg" 
             }
         ];
 
-
-        // Estado do carrinho (quantidade de cada produto)
         let carrinho = {};
 
         function renderizarProdutos() {
@@ -72,23 +101,23 @@
                 let qtd = carrinho[prod.id] || 0;
                 
                 let card = document.createElement('div');
-                card.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-3";
+                card.className = "bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col gap-3 transition hover:shadow-md";
                 
                 card.innerHTML = `
                     <div class="flex gap-4 items-center">
-                        <img src="${prod.imagem}" alt="${prod.nome}" class="w-20 h-20 object-cover rounded-lg border border-gray-100 flex-shrink-0">
+                        <img src="${prod.imagem}" alt="${prod.nome}" class="w-20 h-20 object-cover rounded-xl border border-slate-100 flex-shrink-0">
                         <div class="space-y-1 flex-grow">
-                            <h2 class="font-semibold text-gray-900 text-sm">${prod.nome}</h2>
-                            <p class="text-xs text-gray-500 leading-relaxed">${prod.desc}</p>
-                            <span class="text-emerald-600 font-bold block pt-1">R$ ${prod.preco.toFixed(2)}</span>
+                            <h3 class="font-bold text-slate-900 text-sm">${prod.nome}</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">${prod.desc}</p>
+                            <span class="text-emerald-600 font-bold block pt-0.5">R$ ${prod.preco.toFixed(2)}</span>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center pt-2 border-t border-gray-50">
-                        <span class="text-xs text-gray-400 font-medium">Quantidade:</span>
+                    <div class="flex justify-between items-center pt-3 border-t border-slate-100">
+                        <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Quantidade</span>
                         <div class="flex items-center gap-3">
-                            <button onclick="alterarQtd(${prod.id}, -1)" class="w-8 h-8 bg-gray-100 rounded-full font-bold text-gray-600 flex items-center justify-center">-</button>
-                            <span id="qtd-${prod.id}" class="w-6 text-center font-medium">${qtd}</span>
-                            <button onclick="alterarQtd(${prod.id}, 1)" class="w-8 h-8 bg-emerald-100 rounded-full font-bold text-emerald-600 flex items-center justify-center">+</button>
+                            <button onclick="alterarQtd(${prod.id}, -1)" class="w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-xl font-bold text-slate-600 flex items-center justify-center transition">-</button>
+                            <span id="qtd-${prod.id}" class="w-6 text-center font-bold text-slate-700">${qtd}</span>
+                            <button onclick="alterarQtd(${prod.id}, 1)" class="w-8 h-8 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-xl font-bold flex items-center justify-center transition">+</button>
                         </div>
                     </div>
                 `;
@@ -123,26 +152,52 @@
         function enviarPedido() {
             let total = calcularTotal();
             if (total === 0) {
-                alert("Seleciona pelo menos um produto antes de enviar o pedido.");
+                alert("Por favor, selecione pelo menos um produto antes de finalizar o pedido.");
                 return;
             }
 
-            let mensagem = "Olá! Gostaria de fazer o seguinte pedido:%0A";
+            let nome = document.getElementById('nome-cliente').value.trim();
+            let fone = document.getElementById('fone-cliente').value.trim();
+            let pagamento = document.getElementById('pagamento-cliente').value;
+
+            if (!nome) {
+                alert("Por favor, preencha o seu nome.");
+                document.getElementById('nome-cliente').focus();
+                return;
+            }
+
+            if (!fone) {
+                alert("Por favor, preencha o seu telefone.");
+                document.getElementById('fone-cliente').focus();
+                return;
+            }
+
+            if (!pagamento) {
+                alert("Por favor, selecione a forma de pagamento.");
+                document.getElementById('pagamento-cliente').focus();
+                return;
+            }
+
+            let mensagem = `*📦 NOVO PEDIDO - CATÁLOGO*%0A%0A`;
+            mensagem += `*Cliente:* ${nome}%0A`;
+            mensagem += `*Telefone:* ${fone}%0A`;
+            mensagem += `*Pagamento:* ${pagamento}%0A%0A`;
+            mensagem += `*Itens do Pedido:*%0A`;
+
             produtos.forEach(prod => {
                 let qtd = carrinho[prod.id] || 0;
                 if (qtd > 0) {
-                    mensagem += `- ${qtd}x ${prod.nome} (R$ ${(prod.preco * qtd).toFixed(2)})%0A`;
+                    mensagem += `• ${qtd}x ${prod.nome} - R$ ${(prod.preco * qtd).toFixed(2)}%0A`;
                 }
             });
-            mensagem += `%0A*Total: R$ ${total.toFixed(2)}*`;
+
+            mensagem += `%0A*Total Geral: R$ ${total.toFixed(2)}*`;
 
             let url = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
             window.open(url, '_blank');
         }
 
-        // Inicializar a página
         renderizarProdutos();
     </script>
 </body>
 </html>
-

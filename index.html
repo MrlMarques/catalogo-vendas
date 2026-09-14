@@ -108,7 +108,7 @@
 
             <div>
                 <label class="block text-xs font-semibold text-zinc-400 mb-1">Telefone / WhatsApp</label>
-                <input type="tel" id="fone-cliente" placeholder="Ex: (11) 99999-9999" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
+                <input type="tel" id="fone-cliente" oninput="mascararTelefone(this)" maxlength="15" placeholder="Ex: (11) 99999-9999" class="w-full px-3 py-3 text-sm bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition">
             </div>
 
             <div>
@@ -232,7 +232,6 @@
         function compartilharCatalogo() {
             const urlCatalogo = window.location.href;
             
-            // Tenta usar a API de compartilhamento nativa se disponível (geralmente em celulares via HTTPS)
             if (navigator.share && window.isSecureContext) {
                 navigator.share({
                     title: 'Mrl Store Gold - Catálogo',
@@ -240,14 +239,27 @@
                     url: urlCatalogo,
                 }).catch(() => {});
             } else {
-                // Alternativa universal: copia para a área de transferência
                 navigator.clipboard.writeText(urlCatalogo).then(() => {
                     alert("Link do catálogo copiado para a área de transferência!");
                 }).catch(() => {
-                    // Fallback caso o navegador bloqueie a área de transferência
                     prompt("Copie o link abaixo:", urlCatalogo);
                 });
             }
+        }
+
+        // Função de máscara dinâmica para o telefone no formato (xx) xxxxx-xxxx
+        function mascararTelefone(input) {
+            let valor = input.value.replace(/\D/g, "");
+            if (valor.length > 11) valor = valor.slice(0, 11);
+
+            if (valor.length > 7) {
+                valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+            } else if (valor.length > 2) {
+                valor = valor.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+            } else if (valor.length > 0) {
+                valor = valor.replace(/^(\d*)/, "($1");
+            }
+            input.value = valor;
         }
 
         function filtrarCategoria(cat, elementoBtn) {
@@ -442,8 +454,8 @@
                     document.getElementById('nome-cliente').focus();
                     return;
                 }
-                if (!fone) {
-                    alert("Por favor, preencha o seu telefone.");
+                if (!fone || fone.length < 14) {
+                    alert("Por favor, preencha um telefone válido no formato (xx) xxxxx-xxxx.");
                     document.getElementById('fone-cliente').focus();
                     return;
                 }

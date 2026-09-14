@@ -67,7 +67,7 @@
             </div>
         </section>
 
-        <!-- ETAPA 1.5: PÁGINA DO CARRINHO (NOVO) -->
+        <!-- ETAPA 1.5: PÁGINA DO CARRINHO -->
         <section id="etapa-carrinho" class="hidden space-y-4">
             <div class="flex items-center justify-between">
                 <h2 class="text-sm font-bold uppercase tracking-wider text-amber-400">Seus Itens Selecionados</h2>
@@ -148,7 +148,7 @@
             <span id="valor-total" class="text-lg font-black text-amber-400">R$ 0,00</span>
         </div>
 
-        <!-- Botão Avançar / Enviar -->
+        <!-- Botão Avançar / Ver Carrinho -->
         <button id="btn-acao" onclick="avancarEtapa()" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-black px-6 py-3 rounded-xl font-black text-sm shadow-lg shadow-amber-500/20 transition flex items-center gap-2">
             Ver Carrinho →
         </button>
@@ -247,13 +247,11 @@
             carrinho[id] += delta;
             if (carrinho[id] < 0) carrinho[id] = 0;
             
-            // Atualizar na tela principal se existir
             let spanQtd = document.getElementById(`qtd-${id}`);
             if (spanQtd) spanQtd.innerText = carrinho[id];
 
             atualizarTotal();
             
-            // Se estiver na tela do carrinho, atualiza a lista dele também
             if (etapaAtual === 1.5) {
                 renderizarCarrinhoPagina();
             }
@@ -340,14 +338,14 @@
                     alert("Por favor, selecione pelo menos um produto antes de continuar.");
                     return;
                 }
-                irParaCarrinho();
+                irParaCarrinho(); // CORRIGIDO: Agora vai para o carrinho (1.5) e não direto para os dados
             } else if (etapaAtual === 1.5) {
                 if (res.total === 0) {
                     alert("Seu carrinho está vazio.");
                     voltarParaCatalogo();
                     return;
                 }
-                etapaAtual = 2;
+                etapaAtual = 2; // Agora sim vai para os dados do cliente
                 atualizarTela();
             } else if (etapaAtual === 2) {
                 let nome = document.getElementById('nome-cliente').value.trim();

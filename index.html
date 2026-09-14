@@ -231,15 +231,22 @@
 
         function compartilharCatalogo() {
             const urlCatalogo = window.location.href;
-            if (navigator.share) {
+            
+            // Tenta usar a API de compartilhamento nativa se disponível (geralmente em celulares via HTTPS)
+            if (navigator.share && window.isSecureContext) {
                 navigator.share({
                     title: 'Mrl Store Gold - Catálogo',
                     text: 'Confira os produtos exclusivos da Mrl Store Gold!',
                     url: urlCatalogo,
                 }).catch(() => {});
             } else {
-                navigator.clipboard.writeText(urlCatalogo);
-                alert("Link do catálogo copiado para a área de transferência!");
+                // Alternativa universal: copia para a área de transferência
+                navigator.clipboard.writeText(urlCatalogo).then(() => {
+                    alert("Link do catálogo copiado para a área de transferência!");
+                }).catch(() => {
+                    // Fallback caso o navegador bloqueie a área de transferência
+                    prompt("Copie o link abaixo:", urlCatalogo);
+                });
             }
         }
 

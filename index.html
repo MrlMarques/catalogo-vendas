@@ -33,7 +33,7 @@
 
     <!-- ÍCONE DE CARRINHO FLUTUANTE NO TOPO (Aparece ao selecionar produtos na Etapa 1) -->
     <div id="barra-carrinho-topo" class="hidden max-w-md mx-auto px-4 pt-3">
-        <div onclick="avancarEtapa()" class="bg-zinc-900 border border-amber-500/40 p-3.5 rounded-2xl shadow-lg flex items-center justify-between cursor-pointer hover:bg-zinc-800/80 transition">
+        <div onclick="irParaCarrinho()" class="bg-zinc-900 border border-amber-500/40 p-3.5 rounded-2xl shadow-lg flex items-center justify-between cursor-pointer hover:bg-zinc-800/80 transition">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-lg">
                     🛒
@@ -64,6 +64,23 @@
         <section id="etapa-catalogo" class="space-y-4">
             <div id="lista-produtos" class="space-y-3">
                 <!-- Produtos injetados via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ETAPA 1.5: PÁGINA DO CARRINHO (NOVO) -->
+        <section id="etapa-carrinho" class="hidden space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-amber-400">Seus Itens Selecionados</h2>
+                <button onclick="voltarParaCatalogo()" class="text-xs text-zinc-400 hover:text-zinc-100 font-semibold underline">← Continuar Comprando</button>
+            </div>
+            
+            <div id="lista-carrinho-itens" class="space-y-3">
+                <!-- Itens detalhados do carrinho aparecem aqui -->
+            </div>
+
+            <div class="bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex justify-between items-center shadow-xl">
+                <span class="text-xs font-bold text-zinc-400 uppercase">Total do Carrinho:</span>
+                <span id="carrinho-total-geral" class="text-lg font-black text-amber-400">R$ 0,00</span>
             </div>
         </section>
 
@@ -133,13 +150,13 @@
 
         <!-- Botão Avançar / Enviar -->
         <button id="btn-acao" onclick="avancarEtapa()" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-black px-6 py-3 rounded-xl font-black text-sm shadow-lg shadow-amber-500/20 transition flex items-center gap-2">
-            Continuar →
+            Ver Carrinho →
         </button>
     </div>
 
     <script>
         const numeroWhatsApp = "5512991421077";
-        let etapaAtual = 1;
+        let etapaAtual = 1; // 1: Catálogo | 1.5: Carrinho | 2: Dados | 3: Revisão
         let categoriaAtiva = 'todos';
 
         const produtos = [
@@ -230,8 +247,16 @@
             carrinho[id] += delta;
             if (carrinho[id] < 0) carrinho[id] = 0;
             
-            document.getElementById(`qtd-${id}`).innerText = carrinho[id];
+            // Atualizar na tela principal se existir
+            let spanQtd = document.getElementById(`qtd-${id}`);
+            if (spanQtd) spanQtd.innerText = carrinho[id];
+
             atualizarTotal();
+            
+            // Se estiver na tela do carrinho, atualiza a lista dele também
+            if (etapaAtual === 1.5) {
+                renderizarCarrinhoPagina();
+            }
         }
 
         function calcularTotal() {
@@ -248,10 +273,8 @@
         function atualizarTotal() {
             let res = calcularTotal();
             
-            // Atualizar rodapé
             document.getElementById('valor-total').innerText = `R$ ${res.total.toFixed(2)}`;
 
-            // Atualizar barra do carrinho no topo
             const barraTopo = document.getElementById('barra-carrinho-topo');
             if (res.totalItens > 0 && etapaAtual === 1) {
                 barraTopo.classList.remove('hidden');
@@ -262,12 +285,66 @@
             }
         }
 
+        function irParaCarrinho() {
+            let res = calcularTotal();
+            if (res.total === 0) {
+                alert("Seu carrinho está vazio.");
+                return;
+            }
+            etapaAtual = 1.5;
+            atualizarTela();
+            renderizarCarrinhoPagina();
+        }
+
+        function voltarParaCatalogo() {
+            etapaAtual = 1;
+            atualizarTela();
+        }
+
+        function renderizarCarrinhoPagina() {
+            const container = document.getElementById('lista-carrinho-itens');
+            container.innerHTML = '';
+            let res = calcularTotal();
+
+            produtos.forEach(prod => {
+                let qtd = carrinho[prod.id] || 0;
+                if (qtd > 0) {
+                    let card = document.createElement('div');
+                    card.className = "bg-zinc-900 p-4 rounded-2xl border border-zinc-800 flex items-center justify-between gap-3 shadow-lg";
+                    card.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <img src="${prod.imagem}" alt="${prod.nome}" class="w-14 h-14 object-cover rounded-xl border border-zinc-800">
+                            <div>
+                                <h4 class="font-bold text-zinc-100 text-xs">${prod.nome}</h4>
+                                <span class="text-amber-400 font-bold text-xs">R$ ${(prod.preco * qtd).toFixed(2)}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="alterarQtd(${prod.id}, -1)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 rounded-lg font-bold text-zinc-300 flex items-center justify-center">-</button>
+                            <span class="w-5 text-center text-xs font-bold text-zinc-100">${qtd}</span>
+                            <button onclick="alterarQtd(${prod.id}, 1)" class="w-7 h-7 bg-amber-500/20 text-amber-400 border border-amber-500/40 rounded-lg font-bold flex items-center justify-center">+</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+
+            document.getElementById('carrinho-total-geral').innerText = `R$ ${res.total.toFixed(2)}`;
+        }
+
         function avancarEtapa() {
             let res = calcularTotal();
 
             if (etapaAtual === 1) {
                 if (res.total === 0) {
                     alert("Por favor, selecione pelo menos um produto antes de continuar.");
+                    return;
+                }
+                irParaCarrinho();
+            } else if (etapaAtual === 1.5) {
+                if (res.total === 0) {
+                    alert("Seu carrinho está vazio.");
+                    voltarParaCatalogo();
                     return;
                 }
                 etapaAtual = 2;
@@ -315,8 +392,12 @@
         }
 
         function voltarEtapa() {
-            if (etapaAtual > 1) {
-                etapaAtual--;
+            if (etapaAtual === 1.5) {
+                voltarParaCatalogo();
+            } else if (etapaAtual === 2) {
+                irParaCarrinho();
+            } else if (etapaAtual === 3) {
+                etapaAtual = 2;
                 atualizarTela();
             }
         }
@@ -325,6 +406,7 @@
             const barraCategorias = document.getElementById('barra-categorias');
             const barraCarrinhoTopo = document.getElementById('barra-carrinho-topo');
             const secCatalogo = document.getElementById('etapa-catalogo');
+            const secCarrinho = document.getElementById('etapa-carrinho');
             const secDados = document.getElementById('etapa-dados');
             const secRevisao = document.getElementById('etapa-revisao');
             const btnVoltar = document.getElementById('btn-voltar');
@@ -332,6 +414,7 @@
             const infoRodape = document.getElementById('info-rodape');
 
             secCatalogo.classList.add('hidden');
+            secCarrinho.classList.add('hidden');
             secDados.classList.add('hidden');
             secRevisao.classList.add('hidden');
             btnVoltar.classList.add('hidden');
@@ -342,8 +425,12 @@
             if (etapaAtual === 1) {
                 secCatalogo.classList.remove('hidden');
                 barraCategorias.classList.remove('hidden');
-                btnAcao.innerText = "Continuar →";
-                atualizarTotal(); // Reavalia se exibe a barra do carrinho no topo
+                btnAcao.innerText = "Ver Carrinho →";
+                atualizarTotal();
+            } else if (etapaAtual === 1.5) {
+                secCarrinho.classList.remove('hidden');
+                btnVoltar.classList.remove('hidden');
+                btnAcao.innerText = "Informar Dados →";
             } else if (etapaAtual === 2) {
                 secDados.classList.remove('hidden');
                 btnVoltar.classList.remove('hidden');

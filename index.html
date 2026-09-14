@@ -18,8 +18,13 @@
 <body class="bg-black text-zinc-100 pb-28">
 
     <!-- CABEÇALHO / BANNER DA LOGOTIPO (Tema Preto e Dourado) -->
-    <header class="bg-zinc-950 border-b border-amber-500/30 shadow-2xl p-3 text-center">
+    <header class="bg-zinc-950 border-b border-amber-500/30 shadow-2xl p-3 text-center relative">
         <div class="max-w-md mx-auto">
+            <!-- Botão de Compartilhamento Rápido no Topo Direito -->
+            <button onclick="compartilharCatalogo()" class="absolute top-3 right-4 bg-zinc-900 border border-amber-500/40 hover:bg-zinc-800 text-amber-400 p-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md transition" title="Compartilhar Catálogo">
+                📤 <span class="hidden sm:inline">Compartilhar</span>
+            </button>
+
             <!-- Insira a imagem do seu banner como 'banner.jpeg' no repositório -->
             <img src="banner.jpeg" alt="Mrl Store Gold" class="w-full h-auto max-h-40 object-contain rounded-xl mx-auto shadow-md border border-amber-500/20" onerror="this.style.display='none'; document.getElementById('fallback-titulo').style.display='block';">
             
@@ -49,8 +54,16 @@
         </div>
     </div>
 
+    <!-- BARRA DE PESQUISA POR TEXTO (Visível apenas na Etapa 1) -->
+    <div id="barra-pesquisa-container" class="max-w-md mx-auto px-4 pt-4">
+        <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-500">🔍</span>
+            <input type="text" id="input-pesquisa" oninput="filtrarProdutos()" placeholder="O que você está procurando?" class="w-full pl-10 pr-4 py-3 text-xs bg-zinc-900 text-zinc-100 border border-zinc-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition placeholder-zinc-500">
+        </div>
+    </div>
+
     <!-- NAVEGADOR DE ABAS / CATEGORIAS (Visível apenas na Etapa 1) -->
-    <nav id="barra-categorias" class="max-w-md mx-auto px-4 pt-4 overflow-x-auto whitespace-nowrap flex gap-2 no-scrollbar">
+    <nav id="barra-categorias" class="max-w-md mx-auto px-4 pt-3 overflow-x-auto whitespace-nowrap flex gap-2 no-scrollbar">
         <button onclick="filtrarCategoria('todos', this)" class="cat-btn bg-amber-500 text-black px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-amber-500/20 transition">Todos os Produtos</button>
         <button onclick="filtrarCategoria('smartwatch', this)" class="cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition">Smartwatches</button>
         <button onclick="filtrarCategoria('fone', this)" class="cat-btn bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold transition">Fones de Ouvido</button>
@@ -136,7 +149,7 @@
 
     </main>
 
-    <!-- MODAL DE DETALHES DO PRODUTO (NOVO) -->
+    <!-- MODAL DE DETALHES DO PRODUTO -->
     <div id="modal-produto" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-zinc-900 border border-amber-500/40 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl relative animate-in fade-in zoom-in duration-200">
             <!-- Botão Fechar Modal -->
@@ -216,6 +229,20 @@
 
         let carrinho = {};
 
+        function compartilharCatalogo() {
+            const urlCatalogo = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mrl Store Gold - Catálogo',
+                    text: 'Confira os produtos exclusivos da Mrl Store Gold!',
+                    url: urlCatalogo,
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(urlCatalogo);
+                alert("Link do catálogo copiado para a área de transferência!");
+            }
+        }
+
         function filtrarCategoria(cat, elementoBtn) {
             categoriaAtiva = cat;
 
@@ -227,17 +254,24 @@
             renderizarProdutos();
         }
 
+        function filtrarProdutos() {
+            renderizarProdutos();
+        }
+
         function renderizarProdutos() {
             const container = document.getElementById('lista-produtos');
             container.innerHTML = '';
 
+            let termoBusca = document.getElementById('input-pesquisa') ? document.getElementById('input-pesquisa').value.toLowerCase().trim() : '';
+
             let produtosFiltrados = produtos.filter(prod => {
-                if (categoriaAtiva === 'todos') return true;
-                return prod.categoria === categoriaAtiva;
+                let correspondeCategoria = (categoriaAtiva === 'todos' || prod.categoria === categoriaAtiva);
+                let correspondeBusca = prod.nome.toLowerCase().includes(termoBusca) || prod.desc.toLowerCase().includes(termoBusca);
+                return correspondeCategoria && correspondeBusca;
             });
 
             if (produtosFiltrados.length === 0) {
-                container.innerHTML = `<p class="text-center text-xs text-zinc-500 py-8">Nenhum produto encontrado nesta categoria.</p>`;
+                container.innerHTML = `<p class="text-center text-xs text-zinc-500 py-8">Nenhum produto encontrado.</p>`;
                 return;
             }
 
@@ -445,6 +479,7 @@
         }
 
         function atualizarTela() {
+            const barraPesquisa = document.getElementById('barra-pesquisa-container');
             const barraCategorias = document.getElementById('barra-categorias');
             const barraCarrinhoTopo = document.getElementById('barra-carrinho-topo');
             const secCatalogo = document.getElementById('etapa-catalogo');
@@ -460,12 +495,14 @@
             secDados.classList.add('hidden');
             secRevisao.classList.add('hidden');
             btnVoltar.classList.add('hidden');
+            barraPesquisa.classList.add('hidden');
             barraCategorias.classList.add('hidden');
             barraCarrinhoTopo.classList.add('hidden');
             infoRodape.classList.remove('hidden');
 
             if (etapaAtual === 1) {
                 secCatalogo.classList.remove('hidden');
+                barraPesquisa.classList.remove('hidden');
                 barraCategorias.classList.remove('hidden');
                 btnAcao.innerText = "Ver Carrinho →";
                 atualizarTotal();
